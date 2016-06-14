@@ -75,9 +75,17 @@ WSGI_APPLICATION = 'linewhisper.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dc9jbbqbo487n5',
+        'USER': 'njcuxgmiffpnem',
+        'PASSWORD': 'Z6paVcT7rhpABeudi_bXhg631c',
+        'HOST': 'ec2-107-20-198-81.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
