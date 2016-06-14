@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import json
 
 # Create your views here.
 def recvreq(request):
     body = request.body.decode('utf-8')
-    print('Request: {}'.format(body))
+    rawJson = json.loads(body)
+    for result in rawJson['result']:
+        print('Recv: {}'.format(result['content']['text']))
     return HttpResponse(u"<h1>Hello World</h1>")
