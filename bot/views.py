@@ -3,4 +3,6 @@ from django.http import HttpResponse
 
 # Create your views here.
 def recvreq(request):
-	return HttpResponse(u"<h1>Hello World</h1>")
+    body = request.body.decode('urf-8')
+    print('\nLine Request:\n%s\n' % body)
+    return HttpResponse(u"<h1>Hello World</h1>")
