@@ -87,7 +87,7 @@ def recvreq(request):
 
         # Add friend event
         addFriendEvent = result['content']['onType']
-        if(addFriendEvent==4):
+        if(addFriendEvent=='4'):
             MsgBuild = sendMessageBuild([senderMID],'歡迎使用Linewhisper，請上 https://linewhisper.herokuapp.com 獲取相對應之Token來解鎖服務')
             Msg = json.dumps(MsgBuild)
             req = requests.post(url,data=Msg,headers=sendHeader)
