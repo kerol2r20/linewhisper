@@ -22,6 +22,8 @@ def recvreq(request):
         text = result['content']['text']
         if text == '':
             continue
+
+        # Command
         if text.startswith("/"):
             command = re.match('^/(\w+)',text).group(1)
             if(command == 'new'):
@@ -49,7 +51,15 @@ def recvreq(request):
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
+        # Broadcast
         else:
+            sender = Account.objects.filter(mid=senderMID)
+            # Not a account
+            if(len(sender)==0):
+                MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
+                Msg = json.dumps(MsgBuild)
+                req = requests.post(url,data=Msg,headers=sendHeader)
+                continue
             target = []
             receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
             for recver in receivers:
