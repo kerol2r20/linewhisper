@@ -19,43 +19,60 @@ def recvreq(request):
     rawJson = json.loads(body)
     for result in rawJson['result']:
         senderMID = result['content']['from']
-        text = result['content']['text']
-        if text == '':
-            continue
-        if text.startswith("/"):
-            command = re.match('^/(\w+)',text).group(1)
-            if(command == 'new'):
-                result = re.match('^/new\s+([\w-]*)',text)
-                if result:
-                    token = result.group(1)
-                    # Test wheather the mid is registed
-                    mids = Account.objects.filter(mid=senderMID)
-                    if(len(mids)>=1):
-                        MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
-                        continue
-                    newbie = Account.objects.filter(token=token)
-                    if(len(newbie)==0):
-                        print("Not exist")
-                        MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
-                        continue
-                    else:
-                        newbie[0].mid = senderMID
-                        newbie[0].save()
-                        MsgBuild = sendMessageBuild([senderMID],'註冊成功')
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
 
-        else:
-            target = []
-            receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
-            for recver in receivers:
-                target.append(recver.mid)
-            print('即將送出的訊息是:{}'.format(text))
-            MsgBuild = sendMessageBuild(target,text)
+        # Text event
+        text = result['content']['text']
+        if not text == '':
+            # Command
+            if text.startswith("/"):
+                command = re.match('^/(\w+)',text).group(1)
+                if(command == 'new'):
+                    result = re.match('^/new\s+([\w-]*)',text)
+                    if result:
+                        token = result.group(1)
+                        # Test wheather the mid is registed
+                        mids = Account.objects.filter(mid=senderMID)
+                        if(len(mids)>=1):
+                            MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
+                            Msg = json.dumps(MsgBuild)
+                            req = requests.post(url,data=Msg,headers=sendHeader)
+                            continue
+                        newbie = Account.objects.filter(token=token)
+                        if(len(newbie)==0):
+                            print("Not exist")
+                            MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
+                            Msg = json.dumps(MsgBuild)
+                            req = requests.post(url,data=Msg,headers=sendHeader)
+                            continue
+                        else:
+                            newbie[0].mid = senderMID
+                            newbie[0].save()
+                            MsgBuild = sendMessageBuild([senderMID],'註冊成功')
+                            Msg = json.dumps(MsgBuild)
+                            req = requests.post(url,data=Msg,headers=sendHeader)
+
+            # Broadcast
+            else:
+                sender = Account.objects.filter(mid=senderMID)
+                # Not a account
+                if(len(sender)==0):
+                    MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
+                    Msg = json.dumps(MsgBuild)
+                    req = requests.post(url,data=Msg,headers=sendHeader)
+                    continue
+                target = []
+                receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
+                for recver in receivers:
+                    target.append(recver.mid)
+                print('即將送出的訊息是:{}'.format(text))
+                MsgBuild = sendMessageBuild(target,text)
+                Msg = json.dumps(MsgBuild)
+                req = requests.post(url,data=Msg,headers=sendHeader)
+
+        # Add friend event
+        addFriendEvent = result['content']['onType']
+        if(addFriendEvent==4):
+            MsgBuild = sendMessageBuild([senderMID],'歡迎使用Linewhisper，請上 https://linewhisper.herokuapp.com 獲取相對應之Token來解鎖服務')
             Msg = json.dumps(MsgBuild)
             req = requests.post(url,data=Msg,headers=sendHeader)
     return HttpResponse(u"<h1>Hello World</h1>")
