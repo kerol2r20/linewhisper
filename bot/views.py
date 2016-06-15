@@ -51,6 +51,20 @@ def recvreq(request):
                             Msg = json.dumps(MsgBuild)
                             req = requests.post(url,data=Msg,headers=sendHeader)
 
+            # send message to someone
+            elif text.startswith("!"):
+                targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
+                text = re.match('^!(\w+)\s+(.+)$',text).group(2)
+                target = Account.objects.filter(nickname=targetNick)
+                if(len(target)!=0):
+                    sender = Account.objects.filter(mid=senderMID)
+                    sender = sender[0].nickname
+                    target = target[0].mid
+                    text = sender + " 私訊您: " + text
+                    MsgBuild = sendMessageBuild([target],text)
+                    Msg = json.dumps(MsgBuild)
+                    req = requests.post(url,data=Msg,headers=sendHeader)
+
             # Broadcast
             else:
                 sender = Account.objects.filter(mid=senderMID)
@@ -65,6 +79,8 @@ def recvreq(request):
                 for recver in receivers:
                     target.append(recver.mid)
                 print('即將送出的訊息是:{}'.format(text))
+                nickname = sender[0].nickname
+                text = nickname + ": " + text
                 MsgBuild = sendMessageBuild(target,text)
                 Msg = json.dumps(MsgBuild)
                 req = requests.post(url,data=Msg,headers=sendHeader)
@@ -75,4 +91,6 @@ def recvreq(request):
             MsgBuild = sendMessageBuild([senderMID],'歡迎使用Linewhisper，請上 https://linewhisper.herokuapp.com 獲取相對應之Token來解鎖服務')
             Msg = json.dumps(MsgBuild)
             req = requests.post(url,data=Msg,headers=sendHeader)
+
+
     return HttpResponse(u"<h1>Hello World</h1>")
