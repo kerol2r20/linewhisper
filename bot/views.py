@@ -25,20 +25,20 @@ def recvreq(request):
                 result = re.match('^/new\s+([\w-]*)',text)
                 if result:
                     token = result.group(1)
-                    try:
-                        newbie = Account.objects.get(token=token)
-                    except ObjectDoesNotExist:
+                    newbie = Account.objects.filter(token=token)
+                    if(len(newbie)==0)
                         print("Not exist")
                         MsgBuild = sendMessageBuild([senderMID],'Sorry! Your token may not match any account. Plz try again.')
                         Msg = json.dumps(MsgBuild)
                         requests.post(url,data=Msg,headers=sendHeader)
                         continue
-                    newbie.mid = senderMID
-                    newbie.save()
-                    MsgBuild = sendMessageBuild([senderMID],'Successfully')
-                    Msg = json.dumps(MsgBuild)
-                    Msg = Mgs.encode('utf-8')
-                    requests.post(url,data=Msg,headers=sendHeader)
+                    else:
+                        newbie[0].mid = senderMID
+                        newbie[0].save()
+                        MsgBuild = sendMessageBuild([senderMID],'Successfully')
+                        Msg = json.dumps(MsgBuild)
+                        Msg = Mgs.encode('utf-8')
+                        requests.post(url,data=Msg,headers=sendHeader)
 
         else:
             print('')
