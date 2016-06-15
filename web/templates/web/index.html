@@ -118,8 +118,17 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1>Full Slider by Start Bootstrap</h1>
-                <p>The background images for the slider are set directly in the HTML using inline CSS. The rest of the styles for this template are contained within the <code>full-slider.css</code>file.</p>
+                <h1>Welcome Line Whisper</h1>
+                <h2>這是一個為了實現在line上進行匿名聊天的網站!!</h2>
+                <p>Step1:完成註冊</p>
+                <p>Step2:獲得Token</p>
+                <p>Step3:加機器人好友</p>
+                <img src="{% static "images/qrcode.jpg"%}" alt="">
+                <p>Step4:完成首次登入綁定，對我們的機器人輸入token<code>/new token</code></p>
+                
+                
+                <img src="{% static "images/picture4.png"%}" alt="">
+                <p>Step5:開始聊天!!</p>
             </div>
         </div>
 
@@ -271,7 +280,7 @@
         interval: 5000 //changes the speed
     });
     $( document ).ready(function() {
-    
+
     $('.modal').on('shown.bs.modal', function () {
         $(this).find('form').validator('destroy').validator();
     });
