@@ -9,6 +9,6 @@ def recvreq(request):
     rawJson = json.loads(body)
     for result in rawJson['result']:
         print('Recv: {}'.format(result['content']['text']))
-    fufu = Account.objects.get(name='Fufu')
+    fufu = Account.objects.get(nickname='Fufu')
     print('Test: fufu.email={}'.format(fufu['email']))
     return HttpResponse(u"<h1>Hello World</h1>")
