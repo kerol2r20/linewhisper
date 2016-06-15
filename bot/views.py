@@ -65,6 +65,8 @@ def recvreq(request):
                 for recver in receivers:
                     target.append(recver.mid)
                 print('即將送出的訊息是:{}'.format(text))
+                nickname = sender[0].nickname
+                text = nickname + ": " + text
                 MsgBuild = sendMessageBuild(target,text)
                 Msg = json.dumps(MsgBuild)
                 req = requests.post(url,data=Msg,headers=sendHeader)
