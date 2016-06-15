@@ -298,6 +298,7 @@
                 $('#upmailmsg').addClass("has-error");
                 $("#createaccount").attr('disabled',true);
             }
+
             else
             {
                 $('#upmailerror').text('');
@@ -317,6 +318,13 @@
                 $('#upnicknameerror').text('暱稱已被註冊!');
                 $('#upnicknamemsg').addClass("has-error");
                 $("#createaccount").attr('disabled',true);
+            }
+            else if(nickname.match(/\s+/))
+            {
+                $('#upnicknameerror').text('暱稱不能有空白!');
+                $('#upnicknamemsg').addClass("has-error");
+                $("#createaccount").attr('disabled',true);
+                
             }
             else
             {
