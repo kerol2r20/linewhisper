@@ -29,7 +29,7 @@ def recvreq(request):
                     newbie = Account.objects.filter(token=token)
                     if(len(newbie)==0):
                         print("Not exist")
-                        MsgBuild = sendMessageBuild([senderMID],'Sorry! Your token may not match any account. Plz try again.')
+                        MsgBuild = sendMessageBuild([senderMID],'白痴')
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
                         continue
