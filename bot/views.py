@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.models import Account
 import json
 import re
+import requests
 
 
 
@@ -37,7 +38,7 @@ def recvreq(request):
                         newbie[0].save()
                         MsgBuild = sendMessageBuild([senderMID],'Successfully')
                         Msg = json.dumps(MsgBuild)
-                        Msg = Mgs.encode('utf-8')
+                        # Msg = Mgs.encode('utf-8')
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
         else:
