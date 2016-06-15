@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from bot import views as bot_views
+from web import views as web_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^recvrequest', bot_views.recvreq),
+    url(r'^index',web_views.index,name='index'),
+    url(r'^signup',web_views.signup),
 ]
