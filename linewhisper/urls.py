@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^logout',web_views.logout),
     url(r'^checkemail',web_views.checkemail),
     url(r'^checknickname',web_views.checknickname),
+    url(r'^checkaccount',web_views.checkaccount),
 ]

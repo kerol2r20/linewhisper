@@ -8,12 +8,23 @@ import uuid
 
 def index(request):
 	if request.session.get('Email'):
-		return render(request,'web/mainpage.html')
+		email = request.session.get('Email')
+		temp = Account.objects.get(email = email)
+		token = temp.token
+		return render(request,'web/mainpage.html',{'token':token})
 	else:
 		return render(request,'web/index.html')
 def signin(request):
 	if	request.POST:
-		return render(request,'web/index.html')
+		email = request.POST['inEmail']
+		try:
+			temp = Account.objects.get(email = email)
+			if temp.password == request.POST['inPassword']:
+				request.session['Email'] = email
+			return HttpResponseRedirect(reverse('index'))
+		except :
+			return HttpResponseRedirect(reverse('index'))
+			
 
 	else:
 		return render(request,'web/index.html')
@@ -43,5 +54,11 @@ def checknickname(request):
 		return HttpResponse("error")
 	except :
 		return HttpResponse("ok")
-
+def checkaccount(request):
+	email = request.POST['email']
+	try:
+		Account.objects.get(email=email)
+		return HttpResponse("ok")
+	except :
+		return HttpResponse("error")
 # Create your views here.
