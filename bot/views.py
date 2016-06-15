@@ -50,5 +50,11 @@ def recvreq(request):
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
         else:
-            pass
+            target = []
+            receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
+            for recver in receivers:
+                target.append(recver.mid)
+            MsgBuild = sendMessageBuild(target,text)
+            Msg = json.dumps(MsgBuild)
+            req = requests.post(url,data=Msg,headers=sendHeader)
     return HttpResponse(u"<h1>Hello World</h1>")
