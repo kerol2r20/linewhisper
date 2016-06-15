@@ -12,7 +12,7 @@ def sendMessageBuild(target,content):
     return mesg
 
 def recvreq(request):
-    sendHeader = {'Content-Type':'application/json; charser=UTF-8', 'X-Line-ChannelID':'1467107178', 'X-Line-ChannelSecret':'ee260eb823d4a0c71c54e3a401539acf','X-Line-Trusted-User-With-ACL':'u24ba734c4e2a0b5f06be24b80cf479b0'}
+    sendHeader = {'Content-type':'application/json; charset=UTF-8','X-Line-ChannelID':'1467107178','X-Line-ChannelSecret':'ee260eb823d4a0c71c54e3a401539acf','X-Line-Trusted-User-With-ACL':'u24ba734c4e2a0b5f06be24b80cf479b0'}
     url = 'https://trialbot-api.line.me/v1/events'
     body = request.body.decode('utf-8')
     rawJson = json.loads(body)
@@ -29,7 +29,7 @@ def recvreq(request):
                     if(len(newbie)==0):
                         print("Not exist")
                         MsgBuild = sendMessageBuild([senderMID],'Sorry! Your token may not match any account. Plz try again.')
-                        Msg = json.dumps(MsgBuild).encode('utf-8')
+                        # Msg = json.dumps(MsgBuild).encode('utf-8')
                         req = requests.post(url,data=Msg,headers=sendHeader)
                         continue
                     else:
