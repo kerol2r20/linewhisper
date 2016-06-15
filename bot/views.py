@@ -29,14 +29,14 @@ def recvreq(request):
                     newbie = Account.objects.filter(token=token)
                     if(len(newbie)==0):
                         print("Not exist")
-                        MsgBuild = sendMessageBuild([senderMID],'白痴')
+                        MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
                         continue
                     else:
                         newbie[0].mid = senderMID
                         newbie[0].save()
-                        MsgBuild = sendMessageBuild([senderMID],'Successfully')
+                        MsgBuild = sendMessageBuild([senderMID],'註冊成功')
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
