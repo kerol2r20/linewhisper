@@ -20,7 +20,7 @@ def recvreq(request):
     for result in rawJson['result']:
         senderMID = result['content']['from']
         text = result['content']['text']
-        if text = '':
+        if text == '':
             continue
         if text.startswith("/"):
             command = re.match('^/(\w+)',text).group(1)
