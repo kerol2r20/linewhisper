@@ -6,14 +6,13 @@ import json
 import re
 
 
-sendHeader = {'Content-Type':'application/json; charser=UTF-8', 'X-Line-ChannelID':'1467107178', 'X-Line-ChannelSecret':'ee260eb823d4a0c71c54e3a401539acf','X-Line-Trusted-User-With-ACL':'u24ba734c4e2a0b5f06be24b80cf479b0'}
 
 def sendMessageBuild(target,content):
     mesg = {'to':target,'toChannel':'1383378250','eventType':'138311608800106203','content':{'contentType':'1','toType':'1','text':content}}
     return mesg
 
 def recvreq(request):
-    global sendHeader
+    sendHeader = {'Content-Type':'application/json; charser=UTF-8', 'X-Line-ChannelID':'1467107178', 'X-Line-ChannelSecret':'ee260eb823d4a0c71c54e3a401539acf','X-Line-Trusted-User-With-ACL':'u24ba734c4e2a0b5f06be24b80cf479b0'}
     url = 'https://trialbot-api.line.me/v1/events'
     body = request.body.decode('utf-8')
     rawJson = json.loads(body)
@@ -38,6 +37,7 @@ def recvreq(request):
                     newbie.save()
                     MsgBuild = sendMessageBuild([senderMID],'Successfully')
                     Msg = json.dumps(MsgBuild)
+                    Msg = Mgs.encode('utf-8')
                     requests.post(url,data=Msg,headers=sendHeader)
 
         else:
