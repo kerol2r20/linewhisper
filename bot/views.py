@@ -26,7 +26,7 @@ def recvreq(request):
                 if result:
                     token = result.group(1)
                     newbie = Account.objects.filter(token=token)
-                    if(len(newbie)==0)
+                    if(len(newbie)==0):
                         print("Not exist")
                         MsgBuild = sendMessageBuild([senderMID],'Sorry! Your token may not match any account. Plz try again.')
                         Msg = json.dumps(MsgBuild)
