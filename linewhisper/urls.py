@@ -23,4 +23,8 @@ urlpatterns = [
     url(r'^recvrequest', bot_views.recvreq),
     url(r'^$',web_views.index,name='index'),
     url(r'^signup',web_views.signup),
+    url(r'^signin',web_views.signin),
+    url(r'^logout',web_views.logout),
+    url(r'^checkemail',web_views.checkemail),
+    url(r'^checknickname',web_views.checknickname),
 ]
