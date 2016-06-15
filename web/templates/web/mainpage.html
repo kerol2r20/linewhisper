@@ -55,11 +55,11 @@
                         <a href="https://github.com/kerol2r20/linewhisper">Github</a>
                     </li>
                     <li>
-                        <a type="button"  data-toggle="modal"  data-target="#Modal1">登入</a>
+                        <a type="button"  data-toggle="modal"  data-target="#Modal1">Token</a>
 
                     </li>
                     <li>
-                        <a type="button"  data-toggle="modal"  data-target="#Modal2">註冊</a>
+                        <a href="/logout/">登出</a>
 
                     </li>
                 </ul>
@@ -152,10 +152,10 @@
                     <form  id="signinform"  role="form" method="post"  action="/signip/" data-toggle="validator"  >
                         <div class="row">
                             <div class="col-md-1"></div>
-                            <div class="form-group col-md-8 " >
-                                <label for="upEmail" class="control-label" >電子信箱</label>
+                            <div class="form-group col-md-8  " id="cmailmsg">
+                                <label for="upEmail" class="control-label">電子信箱</label>
                                 <br/>
-                                <input type="email"  placeholder="Use this as login account" class="form-control" id="inEmail" name="inEmail" style="width:500px;"   required >
+                                <input type="email" placeholder="Use this as login account" class="form-control" id="inEmail" name="inEmail" style="width:500px;"   required >
                                 <div class="help-block with-errors"></div>
                             </div>  
                             <div class="col-md-4"></div>
@@ -188,79 +188,7 @@
             </div>
           </div>
         </div>
-    <!-- Modal -->
-        <div class="modal fade" id="Modal2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><i class="fa fa-user-plus"></i>Create a new account</h4>
-              </div>
-              <div class="modal-body" >
-                    
-                         
-                        
-                    <form  id="registform"  role="form" method="post"  action="/signup/" data-toggle="validator"  >
-                        <div class="row">
-                             <div class="col-md-1"></div> 
-                            <div class="form-group col-md-8" id="upnicknamemsg" >
-                                <label for="upNickname" class="control-label">暱稱</label>
-                                <br/>
-                                <input type="text" onkeyup="checknickname()" placeholder="User name" class=form-control id="upNickname" name="upNickname" style="width:500px;" required  >
-                                <div class="help-block with-errors"><p style="color:#AA0000; font-size:14px;" id="upnicknameerror"></p></div>
-                                
-                            </div>  
-                        </div >
 
-
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="form-group col-md-8  " id="upmailmsg">
-                                <label for="upEmail" class="control-label">電子信箱</label>
-                                <br/>
-                                <input type="email" onkeyup="checkemail()" placeholder="Use this as login account" class="form-control" id="upEmail" name="upEmail" style="width:500px;"   required >
-                                <div class="help-block with-errors"><p style="color:#AA0000; font-size:14px;" id="upmailerror"></p></div>
-                            </div>  
-                            <div class="col-md-4"></div>
-                        </div >
-
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="form-group col-md-8"  >
-                                <label for="upPasswword" class="control-label">密碼</label>
-                                <br/>
-                                <input type=password  placeholder=Password class=form-control id="upPassword" name="upPassword" data-minlength="7" style="width:500px;" data-minlength-error="密碼至少7個字!" required>
-                                <div class="help-block with-errors"></div>
-                                
-                            </div>
-                            <div class="col-md-4"></div>
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-md-1"></div>
-                            <div class="form-group col-md-8"  >
-                                <label for="agPasswword" class="control-label">密碼確認</label>
-                                <br/>
-                                <input type=password  placeholder="Enter password again" class="form-control" data-match="#upPassword" data-match-error="密碼確認錯誤!" id="agPasswword" name="agPasswword" style="width:500px;" required>
-                                <div class="help-block with-errors"></div>
-                                
-                            </div>
-                        </div>
-                        <br/>
-                        <br/>
-                        <div class="col-md-7"></div>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" id="createaccount" name="createaccount" >Create & Login</button>
-                    </form>
-                                   
-                        
-                    
-              </div>
-         
-            </div>
-          </div>
-        </div>
     
 
 
@@ -275,46 +203,6 @@
         $(this).find('form').validator('destroy').validator();
     });
     });
-    function checkemail(){
-        
-        var email = $("#upEmail").val();
-        $.post("/checkemail/",{'email':email},function(msg){
-
-            
-            if(msg == 'error'){
-
-                $('#upmailerror').text('帳號已被註冊!');
-                $('#upmailmsg').addClass("has-error");
-                $("#createaccount").attr('disabled',true);
-            }
-            else
-            {
-                $('#upmailerror').text('');
-                $("#createaccount").attr('disabled',false);
-            }
-
-        });
-    }
-        function checknickname(){
-        
-        var nickname = $("#upNickname").val();
-        $.post("/checknickname/",{'nickname':nickname},function(msg){
-
-            
-            if(msg == 'error'){
-
-                $('#upnicknameerror').text('暱稱已被註冊!');
-                $('#upnicknamemsg').addClass("has-error");
-                $("#createaccount").attr('disabled',true);
-            }
-            else
-            {
-                $('#upnicknameerror').text('');
-                $("#createaccount").attr('disabled',false);
-            }
-
-        });
-    }
     </script>
 
 </body>
