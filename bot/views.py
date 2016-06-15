@@ -20,12 +20,21 @@ def recvreq(request):
     for result in rawJson['result']:
         senderMID = result['content']['from']
         text = result['content']['text']
+        if text = '':
+            continue
         if text.startswith("/"):
             command = re.match('^/(\w+)',text).group(1)
             if(command == 'new'):
                 result = re.match('^/new\s+([\w-]*)',text)
                 if result:
                     token = result.group(1)
+                    # Test wheather the mid is registed
+                    mids = Account.objects.filter(mid=senderMID)
+                    if(len(mids)>=1):
+                        MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        continue
                     newbie = Account.objects.filter(token=token)
                     if(len(newbie)==0):
                         print("Not exist")
@@ -41,5 +50,5 @@ def recvreq(request):
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
         else:
-            print('')
+            pass
     return HttpResponse(u"<h1>Hello World</h1>")
