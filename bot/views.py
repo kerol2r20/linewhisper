@@ -54,6 +54,7 @@ def recvreq(request):
             receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
             for recver in receivers:
                 target.append(recver.mid)
+            print('即將送出的訊息是:{}'.forat(text))
             MsgBuild = sendMessageBuild(target,text)
             Msg = json.dumps(MsgBuild)
             req = requests.post(url,data=Msg,headers=sendHeader)
