@@ -76,10 +76,8 @@ def recvreq(request):
                     continue
                 rejectlist = ['']
                 rejectlist.append(senderMID)
-                target = []
+                target = Broadcasttarget(rejectlist)
                 
-                for recver in Broadcasttarget(rejectlist):
-                    target.append(recver.mid)
                 print('即將送出的訊息是:{}'.format(text))
                 nickname = sender[0].nickname
                 text = nickname + ": " + text
@@ -100,4 +98,7 @@ def Broadcasttarget(rejectlist=['']):
     targetlist = Account.objects.all()
     for mid in rejectlist:
         targetlist = targetlist.exclude(mid = mid)
-    return targetlist
+    targetmid = []
+    for recver in targetlist:
+        targetmid.append(recver.mid)
+    return targetmid
