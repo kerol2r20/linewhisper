@@ -74,9 +74,11 @@ def recvreq(request):
                     Msg = json.dumps(MsgBuild)
                     req = requests.post(url,data=Msg,headers=sendHeader)
                     continue
+                rejectlist = ['']
+                rejectlist.append(senderMID)
                 target = []
-                receivers = Account.objects.all().exclude(mid='').exclude(mid=senderMID)
-                for recver in receivers:
+                
+                for recver in Broadcasttarget(rejectlist):
                     target.append(recver.mid)
                 print('即將送出的訊息是:{}'.format(text))
                 nickname = sender[0].nickname
@@ -94,3 +96,8 @@ def recvreq(request):
 
 
     return HttpResponse(u"<h1>Hello World</h1>")
+def Broadcasttarget(rejectlist=['']):
+    targetlist = Account.objects.all()
+    for mid in rejectlist:
+        targetlist = targetlist.exclude(mid = mid)
+    return targetlist
