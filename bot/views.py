@@ -23,28 +23,33 @@ def recvreq(request):
         # Text event
         text = result['content']['text']
         if not text == '':
-
-                        
+         
             try:
-                Account.objects.get(mid=senderMID)
-                                # Command
+                sender = Account.objects.get(mid=senderMID)
+                sender = sender.nickname
+                # Command
                 if text.startswith("/"):
                     command = re.match('^/(\w+)',text).group(1)
                     if command == 'help':
-                        helpmsg = '註冊 /new token\n密語!name message'
+                        helpmsg = '註冊 /new token\n密語!name message\ndice /dice'
                         MsgBuild = sendMessageBuild([senderMID],helpmsg)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
                         continue
-
+                    elif command == 'dice':
+                        diceresult = random.randrange(1,7)
+                        text = sender + "擲出了" + diceresult + "點"
+                        target = Account.objects.all()
+                        MsgBuild = sendMessageBuild([target],text)
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
                 # send message to someone
                 elif text.startswith("!"):
                     targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
                     text = re.match('^!(\w+)\s+(.+)$',text).group(2)
                     target = Account.objects.filter(nickname=targetNick)
                     if(len(target)!=0):
-                        sender = Account.objects.filter(mid=senderMID)
-                        sender = sender[0].nickname
+                    
                         target = target[0].mid
                         text = sender + " 私訊您: " + text
                         MsgBuild = sendMessageBuild([target],text)
@@ -53,13 +58,12 @@ def recvreq(request):
 
                 # Broadcast
                 else:
-                    sender = Account.objects.filter(mid=senderMID)
+                    
                     rejectlist = ['']
                     rejectlist.append(senderMID)
                     target = Broadcasttarget(rejectlist)
                     print('即將送出的訊息是:{}'.format(text))
-                    nickname = sender[0].nickname
-                    text = nickname + ": " + text
+                    text = sender + ": " + text
                     MsgBuild = sendMessageBuild(target,text)
                     Msg = json.dumps(MsgBuild)
                     req = requests.post(url,data=Msg,headers=sendHeader)
