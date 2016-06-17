@@ -23,42 +23,22 @@ def recvreq(request):
         # Text event
         text = result['content']['text']
         if not text == '':
-            # Command
-            if text.startswith("/"):
-                command = re.match('^/(\w+)',text).group(1)
-                if(command == 'new'):
-                    result = re.match('^/new\s+([\w-]*)',text)
-                    if result:
-                        token = result.group(1)
-                        # Test wheather the mid is registed
-                        mids = Account.objects.filter(mid=senderMID)
-                        if(len(mids)>=1):
-                            MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
-                            Msg = json.dumps(MsgBuild)
-                            req = requests.post(url,data=Msg,headers=sendHeader)
-                            continue
-                        newbie = Account.objects.filter(token=token)
-                        if(len(newbie)==0):
-                            print("Not exist")
-                            MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
-                            Msg = json.dumps(MsgBuild)
-                            req = requests.post(url,data=Msg,headers=sendHeader)
-                            continue
-                        else:
-                            newbie[0].mid = senderMID
-                            newbie[0].save()
-                            MsgBuild = sendMessageBuild([senderMID],'註冊成功')
-                            Msg = json.dumps(MsgBuild)
-                            req = requests.post(url,data=Msg,headers=sendHeader)
-                elif command == 'help':
-                    helpmsg = '註冊 /new tokem密語\n!name message'
-                    MsgBuild = sendMessageBuild([senderMID],helpmsg)
-                    Msg = json.dumps(MsgBuild)
-                    req = requests.post(url,data=Msg,headers=sendHeader)
+
+                        
             try:
                 Account.objects.get(mid=senderMID)
+                                # Command
+                if text.startswith("/"):
+                    command = re.match('^/(\w+)',text).group(1)
+                    if command == 'help':
+                        helpmsg = '註冊 /new token\n密語!name message'
+                        MsgBuild = sendMessageBuild([senderMID],helpmsg)
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        continue
+
                 # send message to someone
-                if text.startswith("!"):
+                elif text.startswith("!"):
                     targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
                     text = re.match('^!(\w+)\s+(.+)$',text).group(2)
                     target = Account.objects.filter(nickname=targetNick)
@@ -85,6 +65,40 @@ def recvreq(request):
                     req = requests.post(url,data=Msg,headers=sendHeader)
             # Not a account
             except:
+                # Command
+                if text.startswith("/"):
+                    command = re.match('^/(\w+)',text).group(1)
+                    if(command == 'new'):
+                        result = re.match('^/new\s+([\w-]*)',text)
+                        if result:
+                            token = result.group(1)
+                            # Test wheather the mid is registed
+                            mids = Account.objects.filter(mid=senderMID)
+                            if(len(mids)>=1):
+                                MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
+                                Msg = json.dumps(MsgBuild)
+                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                continue
+                            newbie = Account.objects.filter(token=token)
+                            if(len(newbie)==0):
+                                print("Not exist")
+                                MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
+                                Msg = json.dumps(MsgBuild)
+                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                continue
+                            else:
+                                newbie[0].mid = senderMID
+                                newbie[0].save()
+                                MsgBuild = sendMessageBuild([senderMID],'註冊成功')
+                                Msg = json.dumps(MsgBuild)
+                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                continue
+                    elif command == 'help':
+                        helpmsg = '註冊 /new token\n密語!name message'
+                        MsgBuild = sendMessageBuild([senderMID],helpmsg)
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        continue
                 MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
                 Msg = json.dumps(MsgBuild)
                 req = requests.post(url,data=Msg,headers=sendHeader)
