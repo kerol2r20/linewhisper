@@ -39,7 +39,7 @@ def recvreq(request):
                     elif command == 'dice':
                         diceresult = random.randrange(1,7)
                         text = sender + "擲出了" + diceresult + "點"
-                        target = Account.objects.all()
+                        target = Broadcasttarget()
                         MsgBuild = sendMessageBuild([target],text)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
@@ -98,7 +98,7 @@ def recvreq(request):
                                 req = requests.post(url,data=Msg,headers=sendHeader)
                                 continue
                     elif command == 'help':
-                        helpmsg = '註冊 /new token\n密語!name message'
+                        helpmsg = '註冊 /new token\n密語!name message\ndice /dice'
                         MsgBuild = sendMessageBuild([senderMID],helpmsg)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
