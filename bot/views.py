@@ -50,6 +50,11 @@ def recvreq(request):
                             MsgBuild = sendMessageBuild([senderMID],'註冊成功')
                             Msg = json.dumps(MsgBuild)
                             req = requests.post(url,data=Msg,headers=sendHeader)
+                elif command == 'help':
+                    helpmsg = '!name text => 密語\n 123'
+                    MsgBuild = sendMessageBuild([senderMID],helpmsg)
+                    Msg = json.dumps(MsgBuild)
+                    req = requests.post(url,data=Msg,headers=sendHeader)
 
             # send message to someone
             elif text.startswith("!"):
