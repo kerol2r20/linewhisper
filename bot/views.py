@@ -43,6 +43,12 @@ def recvreq(request):
                         MsgBuild = sendMessageBuild([target],text)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
+                    else:
+                        text = "沒有這指令，使用/help來查詢所有指令"
+                        MsgBuild = sendMessageBuild([senderMID],helpmsg)
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
+
                 # send message to someone
                 elif text.startswith("!"):
                     targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
