@@ -41,14 +41,11 @@ def recvreq(request):
                         diceresult = random.randrange(1,7)
                         text = sender + "擲出了" + str(diceresult) + "點!"
                         target = Broadcasttarget()
-                        MsgBuild = sendMessageBuild(target,text)
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        sendMessage(target,text)
                     else:
                         text = "沒有這指令，使用/help來查詢所有指令。"
-                        MsgBuild = sendMessageBuild([senderMID],text)
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        sendMessage([senderMID],text)
+                       
 
                 # send message to someone
                 elif text.startswith("!"):
@@ -59,9 +56,8 @@ def recvreq(request):
                     
                         target = target[0].mid
                         text = sender + " 私訊您: " + text
-                        MsgBuild = sendMessageBuild([target],text)
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        sendMessage([target],text)
+
 
                 # Broadcast
                 else:
@@ -71,9 +67,8 @@ def recvreq(request):
                     target = Broadcasttarget(rejectlist)
                     print('即將送出的訊息是:{}'.format(text))
                     text = sender + ": " + text
-                    MsgBuild = sendMessageBuild(target,text)
-                    Msg = json.dumps(MsgBuild)
-                    req = requests.post(url,data=Msg,headers=sendHeader)
+                    sendMessage(target,text)
+
             # Not a account
             except:
                 # Command
@@ -86,33 +81,23 @@ def recvreq(request):
                             # Test wheather the mid is registed
                             mids = Account.objects.filter(mid=senderMID)
                             if(len(mids)>=1):
-                                MsgBuild = sendMessageBuild([senderMID],'此Line帳號已經註冊過')
-                                Msg = json.dumps(MsgBuild)
-                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                sendMessage([senderMID],'此Line帳號已經註冊過')
                                 continue
                             newbie = Account.objects.filter(token=token)
                             if(len(newbie)==0):
                                 print("Not exist")
-                                MsgBuild = sendMessageBuild([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
-                                Msg = json.dumps(MsgBuild)
-                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                sendMessage([senderMID],'Token錯誤，請上 https://linewhisper.herokuapp.com 查看教學')
                                 continue
                             else:
                                 newbie[0].mid = senderMID
                                 newbie[0].save()
-                                MsgBuild = sendMessageBuild([senderMID],'註冊成功')
-                                Msg = json.dumps(MsgBuild)
-                                req = requests.post(url,data=Msg,headers=sendHeader)
+                                sendMessage([senderMID],'註冊成功')
                                 continue
                     elif command == 'help':
 
-                        MsgBuild = sendMessageBuild([senderMID],helpmsg)
-                        Msg = json.dumps(MsgBuild)
-                        req = requests.post(url,data=Msg,headers=sendHeader)
+                        sendMessage([senderMID],helpmsg)
                         continue
-                MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
-                Msg = json.dumps(MsgBuild)
-                req = requests.post(url,data=Msg,headers=sendHeader)
+                sendMessage([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
                 continue
 
         # Add friend event
