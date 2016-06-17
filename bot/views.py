@@ -45,7 +45,7 @@ def recvreq(request):
                         req = requests.post(url,data=Msg,headers=sendHeader)
                     else:
                         text = "沒有這指令，使用/help來查詢所有指令"
-                        MsgBuild = sendMessageBuild([senderMID],helpmsg)
+                        MsgBuild = sendMessageBuild([senderMID],text)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
 
