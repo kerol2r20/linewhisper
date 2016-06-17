@@ -5,7 +5,7 @@ from bot.models import Account
 import json
 import re
 import requests
-
+import random
 
 
 def sendMessageBuild(target,content):
@@ -51,44 +51,44 @@ def recvreq(request):
                             Msg = json.dumps(MsgBuild)
                             req = requests.post(url,data=Msg,headers=sendHeader)
                 elif command == 'help':
-                    helpmsg = '!name text => 密語\n 123'
+                    helpmsg = '註冊 /new tokem密語\n!name message'
                     MsgBuild = sendMessageBuild([senderMID],helpmsg)
                     Msg = json.dumps(MsgBuild)
                     req = requests.post(url,data=Msg,headers=sendHeader)
+            try:
+                Account.objects.get(mid=senderMID)
+                # send message to someone
+                if text.startswith("!"):
+                    targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
+                    text = re.match('^!(\w+)\s+(.+)$',text).group(2)
+                    target = Account.objects.filter(nickname=targetNick)
+                    if(len(target)!=0):
+                        sender = Account.objects.filter(mid=senderMID)
+                        sender = sender[0].nickname
+                        target = target[0].mid
+                        text = sender + " 私訊您: " + text
+                        MsgBuild = sendMessageBuild([target],text)
+                        Msg = json.dumps(MsgBuild)
+                        req = requests.post(url,data=Msg,headers=sendHeader)
 
-            # send message to someone
-            elif text.startswith("!"):
-                targetNick = re.match('^!(\w+)\s+(.+)$',text).group(1)
-                text = re.match('^!(\w+)\s+(.+)$',text).group(2)
-                target = Account.objects.filter(nickname=targetNick)
-                if(len(target)!=0):
+                # Broadcast
+                else:
                     sender = Account.objects.filter(mid=senderMID)
-                    sender = sender[0].nickname
-                    target = target[0].mid
-                    text = sender + " 私訊您: " + text
-                    MsgBuild = sendMessageBuild([target],text)
+                    rejectlist = ['']
+                    rejectlist.append(senderMID)
+                    target = Broadcasttarget(rejectlist)
+                    print('即將送出的訊息是:{}'.format(text))
+                    nickname = sender[0].nickname
+                    text = nickname + ": " + text
+                    MsgBuild = sendMessageBuild(target,text)
                     Msg = json.dumps(MsgBuild)
                     req = requests.post(url,data=Msg,headers=sendHeader)
-
-            # Broadcast
-            else:
-                sender = Account.objects.filter(mid=senderMID)
-                # Not a account
-                if(len(sender)==0):
-                    MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
-                    Msg = json.dumps(MsgBuild)
-                    req = requests.post(url,data=Msg,headers=sendHeader)
-                    continue
-                rejectlist = ['']
-                rejectlist.append(senderMID)
-                target = Broadcasttarget(rejectlist)
-                
-                print('即將送出的訊息是:{}'.format(text))
-                nickname = sender[0].nickname
-                text = nickname + ": " + text
-                MsgBuild = sendMessageBuild(target,text)
+            # Not a account
+            except:
+                MsgBuild = sendMessageBuild([senderMID],'此Line帳號尚未驗證Token，請上 https://linewhisper.herokuapp.com 查看教學')
                 Msg = json.dumps(MsgBuild)
                 req = requests.post(url,data=Msg,headers=sendHeader)
+                continue
 
         # Add friend event
         addFriendEvent = result['content']['onType']
