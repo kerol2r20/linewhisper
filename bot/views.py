@@ -38,13 +38,13 @@ def recvreq(request):
                         continue
                     elif command == 'dice':
                         diceresult = random.randrange(1,7)
-                        text = sender + "擲出了" + str(diceresult) + "點"
-                        target = Broadcasttarget()
-                        MsgBuild = sendMessageBuild([target],text)
+                        text = sender + "擲出了" + str(diceresult) + "點!"
+                        # target = Broadcasttarget()
+                        MsgBuild = sendMessageBuild([senderMID],text)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
                     else:
-                        text = "沒有這指令，使用/help來查詢所有指令"
+                        text = "沒有這指令，使用/help來查詢所有指令。"
                         MsgBuild = sendMessageBuild([senderMID],text)
                         Msg = json.dumps(MsgBuild)
                         req = requests.post(url,data=Msg,headers=sendHeader)
