@@ -38,7 +38,7 @@ def recvreq(request):
                         continue
                     elif command == 'dice':
                         diceresult = random.randrange(1,7)
-                        text = sender + "擲出了" + diceresult + "點"
+                        text = sender + "擲出了" + str(diceresult) + "點"
                         target = Broadcasttarget()
                         MsgBuild = sendMessageBuild([target],text)
                         Msg = json.dumps(MsgBuild)
